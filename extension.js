@@ -19,15 +19,15 @@ function activate(context) {
 		}, async (progress) => {
 			let prog = 0;
 			progress.report({  increment: prog });
-			
-			const output = await execShell("sf community publish --name 'PartsStore' -o daaqa");
+			const outputString = '\"' + storeName + '\"';
+			const output = await execShell('sf community publish --name ' + outputString);
 			const backgroundOperationId = output.substring(output.indexOf("08P"), output.length - 1).trim();
 			const queryString = '\"SELECT Status FROM BackgroundOperation WHERE Id = \'' + backgroundOperationId + '\'\"';
 		
 			progress.report({ increment: prog += 10 });
 
 			let checkStatus = async () => {
-				return await execShell('sf data query --query ' + queryString + ' -o daaqa --json');
+				return await execShell('sf data query --query ' + queryString + ' --json');
 			};
 			let validateResult;
 			let validate = result => {
